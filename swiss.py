@@ -123,7 +123,7 @@ def assignMatches(priority, myMatches, otherRoundMatches):
         sortedLevel = sorted(playersAtLevel, key=playersAtLevel.get, reverse=True)
         while len(sortedLevel) > 0:
             pname = sortedLevel.pop(0) # most high-risk player for rematches left in this level
-            oppname = getOpponent(pname, priority, [])
+            oppname = getOpponent(pname, priority, otherRoundMatches)
             player = players[pname]
             opp = players[oppname]
 
