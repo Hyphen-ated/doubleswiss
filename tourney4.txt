@@ -1,0 +1,46 @@
+zami
+dune
+hyph
+anti
+jack
+punny
+5mm
+dan
+cow
+yevon
+mikey
+yama
+thalen
+--
+Round: 1
+cow 2 - 1 zami
+hyph 2 - 0 jack
+dan 1 - 2 yevon
+dune 0 - 2 punny
+anti 2 - 1 yama
+mikey 1 - 2 5mm
+thalen 2 - 0 bye
+Round: 2
+cow 0 - 2 anti
+dan 1 - 2 hyph
+zami 2 - 1 mikey
+dune 0 - 2 punny
+5mm 2 - 1 thalen
+yevon 1 - 2 jack
+yama 2 - 0 bye
+Round: 3
+5mm # - # punny
+anti # - # hyph
+cow # - # thalen
+zami # - # yevon
+jack # - # yama
+dan # - # dune
+mikey # - # bye
+Round: 4
+5mm # - # anti
+punny # - # hyph
+cow # - # yevon
+zami # - # jack
+thalen # - # yama
+dan # - # dune
+mikey # - # bye
