@@ -1,30 +1,34 @@
-import copy,re,sys,random
+# Imports
+import copy, re, sys, random
 
-
+# Player class
 class Player:
     def __init__(self, name):
         self.name = name
         self.wins = []
         self.losses = []
-        self.gameswon = 0
+        self.gamesWon = 0
         self.sameLevelOpponentsPlayed = 0
 
-
+# Global variables
 roundPrefix = "Round: "
-matchRegex = re.compile("(.*) (\d*) - (\d*) (.*)")
+matchRegex = re.compile("(.+) (\d+)-(\d+) (.+)")
 players = {"bye": Player("bye")}
 readingNames = True
 curRound = 0
-
 playedThisRound = {}
 
+# Validate command-line arguments
 if len(sys.argv) < 2:
     sys.exit("need to provide a tournament filename")
 
+# Open the provided file
 infile = open(sys.argv[1], 'r')
 for line in infile:
     line = line.rstrip()
     print line
+    if line == '':
+        continue
     if readingNames:
         if line == "--":
             readingNames = False
@@ -52,8 +56,8 @@ for line in infile:
             playedThisRound[p1] = True
             playedThisRound[p2] = True
 
-            players[p1].gameswon += int(p1score)
-            players[p2].gameswon += int(p2score)
+            players[p1].gamesWon += int(p1score)
+            players[p2].gamesWon += int(p2score)
             if p1score > p2score:
                 players[p1].wins.append(p2)
                 players[p2].losses.append(p1)
@@ -61,7 +65,7 @@ for line in infile:
                 players[p1].losses.append(p2)
                 players[p2].wins.append(p1)
 
-
+# Swiss player order
 def orderPlayersByPriority(playerList):
     orderedPlayers = {}
     for pname in playerList:
@@ -81,7 +85,7 @@ def orderPlayersByPriority(playerList):
         orderedPlayers[level][p.name] = p.sameLevelOpponentsPlayed
     return orderedPlayers
 
-
+# Swiss get opponent
 def getOpponent(pname, priority, otherRound):
     player = players[pname]
     playerLevel = len(player.wins)
@@ -119,6 +123,8 @@ secondRoundStrings = []
 def assignMatches(priority, myMatches, otherRoundMatches):
     matchStrings = []
     for level in range(curRound, -1, -1):
+        if level not in priority:
+            priority[level] = {}
         playersAtLevel = priority[level]
         sortedLevel = sorted(playersAtLevel, key=playersAtLevel.get, reverse=True)
         while len(sortedLevel) > 0:
@@ -129,13 +135,14 @@ def assignMatches(priority, myMatches, otherRoundMatches):
 
             myMatches[pname] = oppname
             myMatches[oppname] = pname
-            matchStrings.append(pname + " # - # " + oppname)
+            matchStrings.append(pname + " #-# " + oppname)
 
             # we've assigned matches for this current player and their two opponents, so remove them from the maps
             del priority[len(player.wins)][pname]
             if oppname != "bye":
                 del priority[len(opp.wins)][oppname]
-                sortedLevel.remove(oppname)
+                if oppname in sortedLevel:
+                    sortedLevel.remove(oppname)
     return matchStrings
 
 firstRoundMatches = {}
@@ -148,6 +155,3 @@ for match in firstRoundStrings:
 print "Round: " + str(curRound + 2)
 for match in secondRoundStrings:
     print match
-
-
-
