@@ -4,7 +4,12 @@ import copy, re, sys, random
 # Player class
 class Player:
     def __init__(self, name):
-        self.name = name
+        if name.startswith('*'):
+            self.dqed = True
+            self.name = name[1:]
+        else:
+            self.dqed = False
+            self.name = name
         self.wins = []
         self.losses = []
         self.gamesWon = 0
@@ -33,14 +38,10 @@ for line in infile:
         if line == "--":
             readingNames = False
         else:
-            players[line] = Player(line)
+            newplayer = Player(line)
+            players[newplayer.name] = newplayer
     else:
         if line.startswith(roundPrefix):
-            accountForBye = -1
-            if "bye" in playedThisRound:
-                accountForBye = 0
-            if curRound > 0 and len(playedThisRound) != len(players) + accountForBye:
-                sys.exit("only " + str(len(playedThisRound)) + " accounted for in round " + str(curRound) + ", expected " + str(len(players)) + " players")
             playedThisRound = {}
             curRound = int(line[len(roundPrefix):])
         else:
@@ -72,6 +73,8 @@ def orderPlayersByPriority(playerList):
         if pname == "bye":
             continue
         p = players[pname]
+        if p.dqed:
+            continue
         p.sameLevelOpponentsPlayed = 0
         level = len(p.wins)
         for oppname in playerList:
